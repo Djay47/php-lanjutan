@@ -1,0 +1,50 @@
+<?php
+	require '../functions.php';
+
+	// Pagination: Konfigurasi Pagination
+	$jmlDataPerHal = 3;
+	$jmlData = count( query_select("SELECT * FROM kategori") );
+	$jmlHal = ceil($jmlData / $jmlDataPerHal);
+	$posHal = ( isset( $_GET["hal"] ) ) ? $_GET["hal"] : 1 ;
+	$awalData = ($jmlDataPerHal * $posHal) - $jmlDataPerHal;
+	
+	$kategori = query_select("SELECT * FROM kategori LIMIT $awalData, $jmlDataPerHal");
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Kategori Page</title>
+	</head>
+	<body>
+		<!-- Navigasi Halaman -->
+		<?php for ( $i = 1; $i <= $jmlHal; ++$i ) : ?>
+			<a href="?hal=<?= $i ?>"><?= $i ?></a>
+			&nbsp &nbsp
+		<?php endfor; ?>
+
+		<br><br>
+
+		<!-- Table Data Kategori -->
+		<table border="1" cellpadding="7" cellspacing="0">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Kategori</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php $nomor = $awalData + 1; ?>
+
+				<?php foreach($kategori as $ktgr) : ?>
+					<tr>
+						<td><?= $nomor ?></td>
+						<td><?= $ktgr["kategori"] ?></td>
+					</tr>
+					
+					<?php ++$nomor; ?>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</body>
+</html>
